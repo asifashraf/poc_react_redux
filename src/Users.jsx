@@ -8,7 +8,7 @@ export default function Users(){
     let [pageNum, setPageNum] = useState(0);
     const dispatch = useDispatch();
     useEffect(() => {
-        loadUsers(dispatch, ++pageNum, setPageNum);
+        loadUsers();
     }, [dispatch]);
     return <>
     <div>Users List: Current page: {pageNum}</div>
@@ -19,23 +19,25 @@ export default function Users(){
         </li>)
         }
     </ul>
-    <button type="button" onClick={() => loadUsers(dispatch, ++pageNum, setPageNum)}>Add more users</button>
-    <button type="button" onClick={() => addUser(dispatch)}>Add user</button>
-    <button type="button" onClick={() => removeUser(dispatch)}>Remove last user</button>
+    <button type="button" onClick={() => loadUsers()}>Add more users</button>
+    <button type="button" onClick={() => addUser()}>Add user</button>
+    <button type="button" onClick={() => removeUser()}>Remove last user</button>
     </>;
+
+    function loadUsers(){
+        const newPageNum = pageNum + 1;
+        setPageNum(newPageNum);
+        dispatch(userActions.fetch(newPageNum));
+    }
+
+    function addUser(){
+        const date = new Date();
+        dispatch(userActions.add(date.toDateString(), 'asif@gmail.com'));
+    }
+
+    function removeUser(){
+        dispatch(userActions.pop());
+
+    }
 }
 
-function loadUsers(dispatch, pageNum, setPageNum){
-    setPageNum(pageNum);
-    dispatch(userActions.fetch(pageNum));
-}
-
-function addUser(dispatch){
-    const date = new Date();
-    dispatch(userActions.add(date.toDateString(), 'asif@gmail.com'));
-}
-
-function removeUser(dispatch){
-    dispatch(userActions.pop());
-
-}
